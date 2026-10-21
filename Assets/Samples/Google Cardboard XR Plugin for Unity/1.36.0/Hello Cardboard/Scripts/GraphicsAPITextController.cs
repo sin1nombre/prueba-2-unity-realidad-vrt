@@ -17,10 +17,6 @@ public class GraphicsAPITextController : MonoBehaviour
             case GraphicsDeviceType.OpenGLES3:
                 tm.text = "OpenGL ES 3";
                 break;
-#if UNITY_IOS
-            case GraphicsDeviceType.Metal:
-                tm.text = "Metal";
-                break;
 
 #endif
 #if UNITY_ANDROID
