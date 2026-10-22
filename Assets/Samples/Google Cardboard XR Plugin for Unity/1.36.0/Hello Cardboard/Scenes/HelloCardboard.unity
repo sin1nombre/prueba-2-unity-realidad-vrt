@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 148680890}
   - component: {fileID: 148680889}
   - component: {fileID: 148680884}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TriSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -496,7 +496,7 @@ GameObject:
   - component: {fileID: 955127916}
   - component: {fileID: 955127917}
   - component: {fileID: 955127919}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Icosahedron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -869,7 +869,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1199920617}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Treasure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1164,7 +1164,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1197,7 +1197,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -1322,7 +1322,7 @@ GameObject:
   - component: {fileID: 1490385955}
   - component: {fileID: 1490385954}
   - component: {fileID: 1490385949}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: QuadSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1451,7 +1451,6 @@ GameObject:
   - component: {fileID: 1518033083}
   - component: {fileID: 1518033082}
   - component: {fileID: 1518033081}
-  - component: {fileID: 1518033080}
   m_Layer: 0
   m_Name: GraphicsAPIText
   m_TagString: Untagged
@@ -1459,18 +1458,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1518033080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1518033079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6e858f9314cf4903a8b6b60d93e3437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &1518033081
 TextMesh:
   serializedVersion: 3
@@ -1479,7 +1466,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518033079}
-  m_Text: Graphics API
+  m_Text: persigue el tesoro
   m_OffsetZ: 0
   m_CharacterSize: 0.5
   m_LineSpacing: 1
@@ -1745,6 +1732,128 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1981408759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1981408763}
+  - component: {fileID: 1981408762}
+  - component: {fileID: 1981408761}
+  - component: {fileID: 1981408760}
+  m_Layer: 0
+  m_Name: ControlsText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1981408760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981408759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef3e7864be9d2b94dbb799bd5116c6e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControlsTextController
+  heightAboveGround: 4.5
+  characterSize: 0.45
+--- !u!102 &1981408761
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981408759}
+  m_Text: "[Modo: Pruebas en PC (Sin Mando)]\nDispositivo: Teclado\n----------------------------------------\nCaminar:
+    W, A, S, D\nMirar alrededor: Flechas (\u2191, \u2193, \u2190, \u2192)\nGirar
+    cuerpo: Flechas (\u2190, \u2192)\nSaltar: Barra Espaciadora\nCorrer (Sprint):
+    Left Shift\nInteractuar Tesoro: Mirar + Tecla E / Enter"
+  m_OffsetZ: 0
+  m_CharacterSize: 0.5
+  m_LineSpacing: 1
+  m_Anchor: 1
+  m_Alignment: 1
+  m_TabSize: 4
+  m_FontSize: 0
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!23 &1981408762
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981408759}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!4 &1981408763
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981408759}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.2844408, z: -0, w: 0.9586936}
+  m_LocalPosition: {x: -9.24, y: 7.43, z: -0.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -33.051, z: 0}
 --- !u!114 &2140619118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1760,7 +1869,7 @@ MonoBehaviour:
   ReticleSortingOrder: 32767
   ReticleInteractionLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 64
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1768,6 +1877,7 @@ SceneRoots:
   - {fileID: 1199920617}
   - {fileID: 907292808}
   - {fileID: 1518033083}
+  - {fileID: 1981408763}
   - {fileID: 1376313361}
   - {fileID: 1882388997}
   - {fileID: 196905683}

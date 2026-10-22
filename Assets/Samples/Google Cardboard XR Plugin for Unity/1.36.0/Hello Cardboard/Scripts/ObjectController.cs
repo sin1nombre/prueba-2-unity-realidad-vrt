@@ -7,25 +7,50 @@ public class ObjectController : MonoBehaviour
     public Material InactiveMaterial;
     public Material GazedAtMaterial;
 
-    // Global counter shared across all 3 treasure shapes
     public static int CollectedCount = 0;
     private static LineRenderer _guideTrail;
-    private static Coroutine _trailCoroutine;
     private static TextMesh _hudCounterText;
 
     private Renderer _myRenderer;
     private bool _isGazedAt = false;
+    private Coroutine _fadeTrailRoutine;
 
     public void Start()
     {
         _myRenderer = GetComponent<Renderer>();
         SetMaterial(false);
 
+        ConfigurePointerLayerAutomatically();
+
+        // Create the discrete top HUD Counter
         CreateHUDCounterIfNeeded();
 
         if (gameObject.activeSelf && CollectedCount == 0)
         {
             SnapParentAboveTerrain(transform.parent.position, 1.5f);
+        }
+    }
+
+    private void ConfigurePointerLayerAutomatically()
+    {
+        int treasureLayer = 8; // User Layer 8
+        transform.parent.gameObject.layer = treasureLayer;
+        foreach (Transform child in transform.parent)
+        {
+            child.gameObject.layer = treasureLayer;
+        }
+
+        MonoBehaviour[] allScripts = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
+        foreach (MonoBehaviour script in allScripts)
+        {
+            if (script.GetType().Name == "CardboardReticlePointer")
+            {
+                var field = script.GetType().GetField("ReticleInteractionLayerMask");
+                if (field != null)
+                {
+                    field.SetValue(script, (LayerMask)(1 << treasureLayer));
+                }
+            }
         }
     }
 
@@ -35,12 +60,12 @@ public class ObjectController : MonoBehaviour
 
         GameObject hudObj = new GameObject("TreasureCounterHUD");
         hudObj.transform.SetParent(Camera.main.transform, false);
-        hudObj.transform.localPosition = new Vector3(0f, 0.32f, 1.5f);
+        hudObj.transform.localPosition = new Vector3(0f, 0.65f, 1.8f);
         hudObj.transform.localRotation = Quaternion.identity;
 
         _hudCounterText = hudObj.AddComponent<TextMesh>();
-        _hudCounterText.characterSize = 0.045f;
-        _hudCounterText.fontSize = 32;
+        _hudCounterText.characterSize = 0.032f;
+        _hudCounterText.fontSize = 28;
         _hudCounterText.alignment = TextAlignment.Center;
         _hudCounterText.anchor = TextAnchor.UpperCenter;
         _hudCounterText.color = new Color(1f, 0.9f, 0.2f);
@@ -159,7 +184,7 @@ public class ObjectController : MonoBehaviour
             float groundY = SamplePureTerrainHeight(candidateXZ, out bool onTerrain);
             if (!onTerrain) continue;
 
-            float hoverHeight = Random.Range(1.3f, 2.0f);
+            float hoverHeight = Random.Range(1.4f, 2.0f);
             Vector3 candidatePos = new Vector3(candidateXZ.x, groundY + hoverHeight, candidateXZ.z);
 
             if (!IsBlockedByTree(candidatePos, groundY))
@@ -175,25 +200,26 @@ public class ObjectController : MonoBehaviour
 
         ShowDirectionalTrail(oldPosition, finalNewPosition);
 
-        int sibIdx = transform.GetSiblingIndex();
         int numSibs = transform.parent.childCount;
-        sibIdx = (sibIdx + Random.Range(1, numSibs)) % numSibs;
-        GameObject randomSib = transform.parent.GetChild(sibIdx).gameObject;
+        if (numSibs > 1)
+        {
+            int randomIdx = Random.Range(0, numSibs);
+            Transform randomSib = transform.parent.GetChild(randomIdx);
+
+            MeshFilter myMf = GetComponent<MeshFilter>();
+            MeshFilter sibMf = randomSib.GetComponent<MeshFilter>();
+            ObjectController sibCtrl = randomSib.GetComponent<ObjectController>();
+
+            if (myMf != null && sibMf != null && sibCtrl != null)
+            {
+                myMf.sharedMesh = sibMf.sharedMesh;
+                InactiveMaterial = sibCtrl.InactiveMaterial;
+                GazedAtMaterial = sibCtrl.GazedAtMaterial;
+            }
+        }
 
         _isGazedAt = false;
         SetMaterial(false);
-        randomSib.SetActive(true);
-
-        if (randomSib != gameObject)
-        {
-            StartCoroutine(DeactivateAfterFrame());
-        }
-    }
-
-    private IEnumerator DeactivateAfterFrame()
-    {
-        yield return null;
-        gameObject.SetActive(false);
     }
 
     private void ShowDirectionalTrail(Vector3 fromPos, Vector3 toPos)
@@ -203,35 +229,51 @@ public class ObjectController : MonoBehaviour
             GameObject trailObj = new GameObject("TreasureGuideTrail");
             _guideTrail = trailObj.AddComponent<LineRenderer>();
             _guideTrail.material = new Material(Shader.Find("Sprites/Default"));
-            _guideTrail.startWidth = 0.28f;
-            _guideTrail.endWidth = 0.02f;
+            _guideTrail.startWidth = 0.22f;
+            _guideTrail.endWidth = 0.04f;
             _guideTrail.numCapVertices = 4;
         }
 
-        MonoBehaviour runner = transform.parent.GetComponent<MonoBehaviour>();
-        if (runner == null) runner = this;
-
-        float guideFraction = 0.45f;
-        Vector3 partialEndXZ = Vector3.Lerp(fromPos, toPos, guideFraction);
-
-        int segments = 16;
+        float guideFraction = 0.40f;
+        int segments = 14;
         _guideTrail.positionCount = segments;
 
         for (int i = 0; i < segments; i++)
         {
-            float t = i / (float)(segments - 1);
-            Vector3 pointXZ = Vector3.Lerp(fromPos, partialEndXZ, t);
-            float groundY = SamplePureTerrainHeight(pointXZ, out _);
+            float t = (i / (float)(segments - 1)) * guideFraction;
+            Vector3 directLinePos = Vector3.Lerp(fromPos, toPos, t);
 
-            float arcBoost = Mathf.Sin(t * Mathf.PI) * 1.2f;
-            float pointY = Mathf.Max(groundY + 0.8f + arcBoost, Mathf.Lerp(fromPos.y, groundY + 1.0f, t));
+            float groundY = SamplePureTerrainHeight(directLinePos, out _);
+            float minSafeHeight = groundY + 0.9f;
 
-            _guideTrail.SetPosition(i, new Vector3(pointXZ.x, pointY, pointXZ.z));
+            if (directLinePos.y < minSafeHeight)
+            {
+                directLinePos.y = minSafeHeight;
+            }
+
+            _guideTrail.SetPosition(i, directLinePos);
         }
 
         _guideTrail.enabled = true;
-        _guideTrail.startColor = new Color(1f, 0.85f, 0.2f, 0.9f);
-        _guideTrail.endColor = new Color(0.2f, 0.9f, 1f, 0.0f); 
+        if (_fadeTrailRoutine != null) StopCoroutine(_fadeTrailRoutine);
+        _fadeTrailRoutine = StartCoroutine(FadeOutTrail());
+    }
+
+    private IEnumerator FadeOutTrail()
+    {
+        float duration = 4.5f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Clamp01(1f - (elapsed / duration));
+            _guideTrail.startColor = new Color(1f, 0.85f, 0.2f, alpha * 0.9f);
+            _guideTrail.endColor = new Color(0.2f, 0.9f, 1f, alpha * 0.15f);
+            yield return null;
+        }
+
+        _guideTrail.enabled = false;
     }
 
     public void OnPointerEnter()
