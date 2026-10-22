@@ -18,7 +18,6 @@ public class GraphicsAPITextController : MonoBehaviour
                 tm.text = "OpenGL ES 3";
                 break;
 
-#endif
 #if UNITY_ANDROID
             case GraphicsDeviceType.Vulkan:
                 tm.text = "Vulkan";
